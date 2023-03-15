@@ -11,10 +11,10 @@ Bun.serve({
   }, // upgrade logic
   websocket: {
     message(ws, message) {
-      console.log(message);
       ws.publish('preset', message);
     }, // a message is received
     open(ws) {
+      console.log("Connected");
       ws.subscribe('preset');
     }, // a socket is opened
     close(ws, code, message) {
