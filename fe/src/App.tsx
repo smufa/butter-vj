@@ -10,7 +10,7 @@ import {
   Stack,
   Tabs,
 } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { useDebouncedState, useElementSize } from "@mantine/hooks";
 import { useEffect, useMemo, useState } from "react";
 import {
   Code,
@@ -21,12 +21,13 @@ import {
   TopologyStarRing,
 } from "tabler-icons-react";
 import { Renderer } from "./lib/Renderer";
-import { FilterEditor } from "./views/filters/FilterEditor";
+import { FilterEditor, FilterSettings } from "./views/filters/FilterEditor";
 import { Inputs } from "./views/inputs/Inputs";
 import { Settings, VisSettings } from "./views/visualizer/VisualizerSettings";
 
 import { AudioIn } from "./lib/lib";
 import { getPresets } from "./views/visualizer/preview/PresetLoader";
+import { SlideSubmit } from "./components/SlideSubmit";
 
 // arrange into a grid with 2 columns and 2 rows
 // 1st row: 1st column: tabs
@@ -38,6 +39,20 @@ function App() {
   const [audioIn, setAudioIn] = useState(new AudioIn());
   const [audi, setAudi] = useState(false);
   const [preset, setPreset] = useState<any>(null);
+
+  // filter settings
+  const [filterSettings, setFilterSettings] = useState<FilterSettings>({
+    hue: 0,
+    saturation: 0,
+    brightness: 0,
+    contrast: 0,
+    blur: 0,
+  });
+
+  const [debouncedFilterSettings, setValue] = useDebouncedState(
+    filterSettings,
+    300
+  );
 
   function setSettingsW(settings: Settings) {
     setPreset(getPresets(settings));
@@ -113,7 +128,12 @@ function App() {
       >
         {tab === 0 && <Inputs />}
         {tab === 1 && <VisSettings setSettings={setSettingsW} />}
-        {tab === 2 && <FilterEditor />}
+        {tab === 2 && (
+          <FilterEditor
+            setSettings={setFilterSettings}
+            baseSettings={debouncedFilterSettings}
+          />
+        )}
       </Box>
       <Box
         style={{
@@ -123,15 +143,28 @@ function App() {
           overflowY: "hidden",
         }}
       >
-        <Box w="100%" h="60vh" ref={ref}>
+        <Box
+          w="100%"
+          h="60vh"
+          display="flex"
+          ref={ref}
+          style={{
+            filter: `hue-rotate(${filterSettings.hue}deg) saturate(${filterSettings.saturation}%) brightness(${filterSettings.brightness}%) contrast(${filterSettings.contrast}%) blur(${filterSettings.blur}px)`,
+          }}
+        >
           {width && height && audi && preset && (
-            <Renderer
-              aud={audioIn}
-              preset={preset}
-              sizex={Math.min(width, height)}
-              sizey={Math.min(width, height)}
-            />
+            <>
+              <Renderer
+                aud={audioIn}
+                preset={preset}
+                sizex={Math.min(width, height)}
+                sizey={Math.min(width, height)}
+              />
+            </>
           )}
+        </Box>
+        <Box p="xl">
+          <SlideSubmit></SlideSubmit>
         </Box>
       </Box>
     </Box>

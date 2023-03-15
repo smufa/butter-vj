@@ -14,7 +14,6 @@ import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 import { FancySliderIn } from "./FancySliderIn";
 import { getPresetOptions } from "./preview/PresetLoader";
-import { hexToRGB, RGBtoHex } from "./utils";
 
 export interface Settings {
   wave_color_r: number;

@@ -6,8 +6,10 @@ import {
   Text,
   Slider,
   ActionIcon,
+  SliderProps,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useEffect } from "react";
 import {
   Blur,
   Brightness2,
@@ -19,17 +21,18 @@ import {
   Plus,
 } from "tabler-icons-react";
 
-interface SettingsHolderInterface {
-  Icon: React.ReactNode;
+interface SettingsHolderInterface extends SliderProps {
+  icon: React.ReactNode;
   label: string;
   value: number;
   onChange: (value: number) => void;
 }
 export const SettingsHolder = ({
-  Icon,
+  icon,
   label,
   onChange,
   value,
+  ...other
 }: SettingsHolderInterface) => {
   return (
     <Paper
@@ -41,13 +44,15 @@ export const SettingsHolder = ({
       }}
     >
       <Flex align="center">
-        <Icon />
+        {icon}
         <Text weight="bold" ml="xl">
           {label}
         </Text>
       </Flex>
       <Flex w="100%" align="center" mt="md">
         <Slider
+          step={1}
+          {...other}
           w="100%"
           color="teal"
           value={value}
@@ -61,7 +66,7 @@ export const SettingsHolder = ({
   );
 };
 
-interface FilterSettings {
+export interface FilterSettings {
   hue: number;
   saturation: number;
   brightness: number;
@@ -69,110 +74,57 @@ interface FilterSettings {
   blur: number;
 }
 
-export const FilterEditor = () => {
+interface FilterEditorProps {
+  setSettings: (settings: FilterSettings) => void;
+  baseSettings: FilterSettings;
+}
+
+export const FilterEditor = ({
+  setSettings,
+  baseSettings,
+}: FilterEditorProps) => {
   const form = useForm<FilterSettings>({
-    initialValues: {
-      hue: 0,
-      saturation: 0,
-      brightness: 0,
-      contrast: 0,
-      blur: 0,
-    },
+    initialValues: baseSettings,
   });
+
+  useEffect(() => {
+    setSettings(form.values);
+  }, [form.values]);
+
+  useEffect(() => {
+    form.setValues(baseSettings);
+  }, [baseSettings]);
+
   return (
     <Container size="30rem">
       <Stack>
         <SettingsHolder
-          icon={<Filter size="1rem" />}
-          label="hue"
-          onChange={console.log}
-          value={0}
-        ></SettingsHolder>
-        <Paper
-          withBorder
-          shadow="xl"
-          p="xl"
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          <Flex align="center">
-            <ColorFilter />
-            <Text weight="bold" ml="xl">
-              Saturation
-            </Text>
-          </Flex>
-          <Flex w="100%" align="center" mt="md">
-            <Slider w="100%" color="teal"></Slider>
-            <ActionIcon variant="light" radius="xl" ml="xl" color="teal">
-              <CircleDot size="1rem" />
-            </ActionIcon>
-          </Flex>
-        </Paper>
-        <Paper
-          withBorder
-          shadow="xl"
-          p="xl"
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          <Flex align="center">
-            <Blur />
-            <Text weight="bold" ml="xl">
-              Blur
-            </Text>
-          </Flex>
-          <Flex w="100%" align="center" mt="md">
-            <Slider w="100%" color="teal"></Slider>
-            <ActionIcon variant="light" radius="xl" ml="xl" color="teal">
-              <CircleDot size="1rem" />
-            </ActionIcon>
-          </Flex>
-        </Paper>
-        <Paper
-          withBorder
-          shadow="xl"
-          p="xl"
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          <Flex align="center">
-            <Contrast />
-            <Text weight="bold" ml="xl">
-              Contrast
-            </Text>
-          </Flex>
-          <Flex w="100%" align="center" mt="md">
-            <Slider w="100%" color="teal"></Slider>
-            <ActionIcon variant="light" radius="xl" ml="xl" color="teal">
-              <CircleDot size="1rem" />
-            </ActionIcon>
-          </Flex>
-        </Paper>
-
-        <Paper
-          withBorder
-          shadow="xl"
-          style={{
-            cursor: "pointer",
-          }}
-          p="xl"
-        >
-          <Flex align="center">
-            <Brightness2 />
-            <Text weight="bold" ml="xl">
-              Brightness
-            </Text>
-          </Flex>
-          <Flex w="100%" align="center" mt="md">
-            <Slider w="100%" color="teal"></Slider>
-            <ActionIcon variant="light" radius="xl" ml="xl" color="teal">
-              <CircleDot size="1rem" />
-            </ActionIcon>
-          </Flex>
-        </Paper>
+          icon={<Filter></Filter>}
+          label="Hue"
+          min={0}
+          max={360}
+          {...form.getInputProps("hue")}
+        />
+        <SettingsHolder
+          icon={<ColorFilter />}
+          label="saturation"
+          {...form.getInputProps("saturation")}
+        />
+        <SettingsHolder
+          icon={<Blur />}
+          label="Blur"
+          {...form.getInputProps("blur")}
+        />
+        <SettingsHolder
+          icon={<Contrast />}
+          label="Contrast"
+          {...form.getInputProps("contrast")}
+        />
+        <SettingsHolder
+          icon={<Brightness2 />}
+          label="Brightness"
+          {...form.getInputProps("brightness")}
+        />
       </Stack>
     </Container>
   );
