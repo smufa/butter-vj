@@ -34,7 +34,9 @@ export class WSManager {
   }
 
   // publish data to topic
-  public send(data: string) {
-    this.ws.send(JSON.stringify(data));
-  }
+  public onMessage = (callback: (data: any) => void) => {
+    this.ws.addEventListener("message", function (event) {
+      callback(event.data);
+    });
+  };
 }

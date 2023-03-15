@@ -28,6 +28,7 @@ import { Settings, VisSettings } from "./views/visualizer/VisualizerSettings";
 import { AudioIn } from "./lib/lib";
 import { getPresets } from "./views/visualizer/preview/PresetLoader";
 import { SlideSubmit } from "./components/SlideSubmit";
+import { manager } from "./main";
 
 // arrange into a grid with 2 columns and 2 rows
 // 1st row: 1st column: tabs
@@ -141,6 +142,11 @@ function App() {
           gridColumn: "2 / 3",
           overflowX: "hidden",
           overflowY: "hidden",
+
+          display: "flex",
+          justifyItems: "center",
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
         <Box
@@ -164,7 +170,12 @@ function App() {
           )}
         </Box>
         <Box p="xl">
-          <SlideSubmit></SlideSubmit>
+          <SlideSubmit
+            onSubmit={() => {
+              console.log("submit");
+              manager.send(JSON.stringify(preset));
+            }}
+          />
         </Box>
       </Box>
     </Box>

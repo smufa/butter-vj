@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { WSManager } from "./socket/socketManager";
 
-const SERVER_HOST = "localhost:1337";
+const SERVER_HOST = prompt("hostnme") + ":1337";
 export const manager = new WSManager(SERVER_HOST);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

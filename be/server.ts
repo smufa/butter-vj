@@ -1,5 +1,3 @@
-
-
 Bun.serve({
   port: 1337,
   fetch(req, server) {
@@ -11,16 +9,16 @@ Bun.serve({
   }, // upgrade logic
   websocket: {
     message(ws, message) {
-      ws.publish('preset', message);
+      ws.publish("preset", message);
+      console.log("Received: " + message);
     }, // a message is received
     open(ws) {
       console.log("Connected");
-      ws.subscribe('preset');
+      ws.subscribe("preset");
     }, // a socket is opened
     close(ws, code, message) {
-      ws.unsubscribe('preset');
+      ws.unsubscribe("preset");
     }, // a socket is closed
-    drain(ws) {}, // the socket is ready to receive more data
+    drain(ws) {}, // tthe socket is ready to receive more data
   },
 });
-
