@@ -97,6 +97,6 @@ export class Vis {
   loadPreset(preset) {
     console.log("load preset: IZ KNJIZCNICE TIPO");
 
-    this.visualizer.loadPreset(preset, 0.0);
+    this.visualizer.loadPreset(preset, 1.0);
   }
 }
