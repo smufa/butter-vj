@@ -9,11 +9,12 @@ import {
   Slider,
   Stack,
   Text,
+  Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FancySliderIn } from "./FancySliderIn";
-import { getPresetOptions } from "./preview/PresetLoader";
+import { getPresetOptions, getPresets } from "./preview/PresetLoader";
 
 export interface Settings {
   wave_color_r: number;
@@ -27,10 +28,17 @@ export interface Settings {
   rot: number;
   decay: number;
   preset: string;
+  warp: string;
+  comp: string;
+  frame_eqs_str: string;
+  pixel_eqs_str: string;
+  all_waves_frame_eqs_str: string;
+  all_waves_pixel_eqs_str: string;
 }
 
 export interface VisSettingsProps {
   setSettings: (settings: Settings) => void;
+  initialSettings: Settings;
 }
 
 export const VisSettings = ({ setSettings }: VisSettingsProps) => {
@@ -47,8 +55,26 @@ export const VisSettings = ({ setSettings }: VisSettingsProps) => {
       rot: 0,
       decay: 0,
       preset: getPresetOptions()[0],
+      warp: "",
+      comp: "",
+      frame_eqs_str: "",
+      pixel_eqs_str: "",
+      all_waves_frame_eqs_str: "",
+      all_waves_pixel_eqs_str: "",
     },
   });
+
+  useEffect(() => {
+    const vals = getPresets(form.values);
+    form.values.warp = vals.warp;
+    form.values.comp = vals.comp;
+    form.values.frame_eqs_str = vals.frame_eqs_str;
+    form.values.pixel_eqs_str = vals.pixel_eqs_str;
+
+    // for (let i = 0; i < vals.waves.length; i++) {
+    //   vals.waves[i].frame_eqs_str = vals.waves[i].frame_eqs_str.join(" ");
+    // }
+  }, [form.values.preset]);
 
   useEffect(() => {
     setSettings(form.values);
@@ -139,6 +165,15 @@ export const VisSettings = ({ setSettings }: VisSettingsProps) => {
               onSettingsClick={console.log}
               {...form.getInputProps("decay")}
             />
+            <Text>Warp</Text>
+            <Textarea minRows={8} {...form.getInputProps("warp")} />
+            <Text>Comp</Text>
+            <Textarea minRows={8} {...form.getInputProps("comp")} />
+            <Text>Frame eqs</Text>
+            <Textarea minRows={8} {...form.getInputProps("frame_eqs_str")} />
+            <Text>Pixel eqs</Text>
+            <Textarea minRows={8} {...form.getInputProps("pixel_eqs_str")} />
+
             <Button type="submit">Update</Button>
           </Stack>
         </Paper>

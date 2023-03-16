@@ -20,15 +20,15 @@ import {
   Photo,
   TopologyStarRing,
 } from "tabler-icons-react";
-import { Renderer } from "./lib/Renderer";
 import { FilterEditor, FilterSettings } from "./views/filters/FilterEditor";
 import { Inputs } from "./views/inputs/Inputs";
 import { Settings, VisSettings } from "./views/visualizer/VisualizerSettings";
 
-import { AudioIn } from "./lib/lib";
 import { getPresets } from "./views/visualizer/preview/PresetLoader";
 import { SlideSubmit } from "./components/SlideSubmit";
 import { manager } from "./main";
+import { AudioIn } from "./lib/lib";
+import { Renderer } from "./lib/Renderer";
 
 // arrange into a grid with 2 columns and 2 rows
 // 1st row: 1st column: tabs
@@ -58,6 +58,7 @@ function App() {
   function setSettingsW(settings: Settings) {
     setPreset(getPresets(settings));
     console.log("settings set");
+    console.log(preset);
   }
 
   return (
@@ -163,8 +164,8 @@ function App() {
               <Renderer
                 aud={audioIn}
                 preset={preset}
-                sizex={Math.min(width, height)}
-                sizey={Math.min(width, height)}
+                sizex={width}
+                sizey={height}
               />
             </>
           )}

@@ -66,13 +66,20 @@ export class Vis {
     this.visualizer.render(() => {});
   }
 
-  initPlayer(canvas, audioContext, sourceNode, size = 1000, preset) {
+  initPlayer(
+    canvas,
+    audioContext,
+    sourceNode,
+    sizex = 1000,
+    sizey = 1000,
+    preset
+  ) {
     this.visualizer = butterchurn.default.createVisualizer(
       audioContext,
       canvas,
       {
-        width: size,
-        height: size,
+        width: sizex,
+        height: sizey,
         pixelRatio: window.devicePixelRatio || 1,
         textureRatio: 2,
         zoom: 0.2,
@@ -90,6 +97,6 @@ export class Vis {
   loadPreset(preset) {
     console.log("load preset: IZ KNJIZCNICE TIPO");
 
-    this.visualizer.loadPreset(preset, 0.0);
+    this.visualizer.loadPreset(preset, 1.0);
   }
 }

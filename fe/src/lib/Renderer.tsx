@@ -19,6 +19,7 @@ export const Renderer = ({ aud, preset, sizex, sizey }: RendererProps) => {
         ref.current,
         aud.audioContext,
         aud.getOutputNode(),
+        sizex,
         sizey,
         preset
       );
